@@ -1,0 +1,15 @@
+diff --git a/node_modules/sequelize-cli/lib/core/migrator.js b/node_modules/sequelize-cli/lib/core/migrator.js
+index 878454a..36f1d24 100644
+--- a/node_modules/sequelize-cli/lib/core/migrator.js
++++ b/node_modules/sequelize-cli/lib/core/migrator.js
+@@ -46,8 +46,9 @@ function getSequelizeInstance() {
+   config = _lodash2.default.defaults(config, { logging: logMigrator });
+ 
+   try {
+-    return new Sequelize(config);
++    return new Sequelize(config.default);
+   } catch (e) {
++    console.log(e)
+     _index2.default.view.error(e);
+   }
+ }
