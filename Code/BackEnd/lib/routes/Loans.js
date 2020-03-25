@@ -1,13 +1,20 @@
 import express from "express";
 let router = express.Router();
 
+/**
+ * @swagger
+ * tags:
+ *   name: Loans
+ *   description: User's Loans
+ */
+
 router
-  .route("/student-loans")
+  .route("/loans")
   .get((req, res) => {})
   .post((req, res) => {});
 
 router
-  .route("/student-loans/:loanID")
+  .route("/loans/:loanID")
   .put((req, res) => {})
   .delete((req, res) => {});
 

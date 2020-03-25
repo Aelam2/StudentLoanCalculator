@@ -1,6 +1,13 @@
 import express from "express";
 let router = express.Router();
 
+/**
+ * @swagger
+ * tags:
+ *   name: Payment Plans
+ *   description: User's Payment Plans
+ */
+
 router
   .route("/payment-plans")
   .get((req, res) => {})
