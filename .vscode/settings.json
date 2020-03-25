@@ -1,3 +1,4 @@
 {
-  "prettier.configPath": "./Code/.prettierrc"
+  "prettier.configPath": "./Code/.prettierrc",
+  "editor.foldingStrategy": "indentation"
 }
