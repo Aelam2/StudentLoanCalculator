@@ -1,6 +1,8 @@
 import express from "express";
-import { Users, Sequelize } from "../models/models";
-import { validateSignUp, signUserToken } from "../helpers/userHelper";
+import passport from "passport";
+import { Users } from "../models/models";
+import { signUserToken } from "../helpers/userHelper";
+import { handleSequelizeError } from "../helpers/errorHelper";
 let router = express.Router();
 
 /**
@@ -33,12 +35,15 @@ let router = express.Router();
  *        content:
  *          application/json:
  *            schema:
- *              type: object
- *              properties:
- *                error:
- *                  type: string
- *                  description: sign-up confliction error
+ *               $ref: '#/components/schemas/FourZeroNineError'
+ *      '422':
+ *        description: Invalid input for a field
+ *        content:
+ *          application/json:
+ *            schema:
+ *               $ref: '#/components/schemas/FourTwentyTwoError'
  *      '500':
+ *         description: An unexpected error occured
  *         content:
  *           application/json:
  *             schema:
@@ -80,74 +85,77 @@ router.route("/sign-up").post(async (req, res) => {
   try {
     let { UserName, Password, FirstName, LastName, Email } = req.body;
 
-    //check if UserName or Email already exists
-    let doesExist = await validateSignUp({ UserName, Email });
-    if (doesExist) {
-      return res.status(409).json({ error: doesExist });
-    }
-
-    //Create new user
+    // Create new User, Errors are handled in catch block
     const newUser = await Users.create({ UserName, Password, FirstName, LastName, Email });
-    await newUser.save();
 
+    // Sign JWT Token
     const token = signUserToken(newUser);
 
-    //respond with token
+    // Response with Token
     res.status(200).json({ token });
   } catch (error) {
-    res.status(500).send({ status: "error", error });
+    let sequelizeError = handleSequelizeError(error);
+    if (sequelizeError.status) {
+      res.status(sequelizeError.status).json({ ...sequelizeError, status: "error", result: null });
+    } else {
+      res.status(500).json({ status: "error", result: null, error: "An unexpected error occurred" });
+    }
   }
 });
 
 /**
  * @swagger
  *
- * /login:
+ * /sign-in:
  *  post:
  *    description: Returns a JWT token that is required for logged-in routes.
  *    tags: [Users]
+ *    responses:
+ *      '200':
+ *        description: Sign-in was successful and token was returned
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                token:
+ *                  type: string
+ *                  description: token used for logged-in requests
+ *      '401':
+ *        description: Username or Password incorrect
+ *      '500':
+ *         description: An unexpected error occured
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/FiveHundredError'
  *    requestBody:
  *      required: true
  *      content:
  *        application/json:
  *          schema:
- *            $ref: '#/components/schemas/Users'
- *      responses:
- *        "200":
- *          description: A user schema
- *          content:
- *            application/json:
- *              schema:
- *                $ref: '#/components/schemas/Users'
+ *            type: object
+ *            required:
+ *              - UserName
+ *              - Password
+ *            properties:
+ *              UserName:
+ *                type: string
+ *                required: true
+ *                description: UserName attempting to login
+ *              Password:
+ *                type: string
+ *                format: password
+ *                required: true
+ *                description: UserName's currently set password
  */
-router.route("/login").post((req, res) => {
+router.route("/sign-in").post(passport.authenticate("local", { session: false }), (req, res) => {
   try {
     const token = signUserToken(req.user);
 
     res.status(200).json({ token });
   } catch (err) {
-    res.status(500).send({ status: "error", error: err });
-  }
-});
-
-router.route("/password-reset").post((req, res) => {
-  try {
-  } catch (err) {
-    res.status(500).send({ status: "error", error: err });
-  }
-});
-
-router.route("/me").get(async (req, res) => {
-  try {
-    let user = await Users.findOne({ where: { UserID: 1 } });
-
-    res.status(200).send({
-      status: "success",
-      data: user.toJSON(),
-      msg: ""
-    });
-  } catch (err) {
-    res.status(500).send({ status: "error", msg: "an unexpected error occured" });
+    res.status(500).send({ status: "error", result: null, error: "An unexpected error occurred" });
   }
 });
 

@@ -1,3 +1,5 @@
+import bcrypt from "bcryptjs";
+
 /**
  * @swagger
  *  components:
@@ -13,11 +15,6 @@
  *            type: string
  *            required: true
  *            description: User inputted value used for future logins
- *          Password:
- *            type: string
- *            format: password
- *            required: true
- *            description: Hashed user password, is required
  *          FirstName:
  *            type: string
  *            nullable: true
@@ -49,7 +46,6 @@
  *        example:
  *          UserID: 1
  *          UserName: Aelam
- *          Password: ABCDEFGH1234$%
  *          FirstName: Alex
  *          LastName: Elam
  *          Email: "james@alexelam.dev"
@@ -70,8 +66,21 @@ module.exports = (sequelize, DataTypes) => {
       },
       UserName: {
         type: DataTypes.STRING,
-        unique: true,
-        allowNull: false
+        unique: {
+          args: true,
+          msg: "UserName has already been taken"
+        },
+        allowNull: false,
+        validate: {
+          len: {
+            args: [3, 40],
+            msg: "Username must start with a letter, have no spaces, and be between 3 to 40 characters."
+          },
+          is: {
+            args: /^[A-Za-z][A-Za-z0-9-]+$/i, // must start with letter and only have letters, numbers, dashes
+            msg: "Username must start with a letter, have no spaces, and be 3 - 40 characters."
+          }
+        }
       },
       Password: {
         type: DataTypes.STRING,
@@ -79,21 +88,36 @@ module.exports = (sequelize, DataTypes) => {
       },
       FirstName: {
         type: DataTypes.STRING,
+        allowNull: true,
         validate: {
-          isAlpha: true
+          len: {
+            args: [0 - 254],
+            msg: "Your full name can only be 254 caracters."
+          }
         }
       },
       LastName: {
         type: DataTypes.STRING,
+        allowNull: true,
         validate: {
-          isAlpha: true
+          len: {
+            args: [0 - 254],
+            msg: "Your full name can only be 254 caracters."
+          }
         }
       },
       Email: {
         type: DataTypes.STRING,
         unique: true,
         validate: {
-          isEmail: true
+          isEmail: {
+            args: true,
+            msg: "The email you entered is invalid or is already in our system."
+          },
+          len: {
+            args: [1 - 254],
+            msg: "The email you entered is invalid or longer than 254 characters."
+          }
         }
       },
       LastLogin: {
@@ -114,12 +138,31 @@ module.exports = (sequelize, DataTypes) => {
       createdAt: "DateCreated",
       updatedAt: "DateUpdated",
       deletedAt: "DateDeleted",
-      paranoid: true
+      paranoid: true,
+
+      hooks: {
+        beforeCreate: async User => {
+          try {
+            // Generate salt
+            const salt = await bcrypt.genSalt(10);
+
+            // Hash password - Salt + Password
+            User.Password = await bcrypt.hash(User.Password, salt);
+          } catch (err) {
+            throw new Error(err);
+          }
+        }
+      }
     }
   );
+
+  Users.prototype.isValidPassword = async function(password) {
+    return await bcrypt.compare(password, this.Password);
+  };
 
   Users.associate = function(models) {
     // associations can be defined here
   };
+
   return Users;
 };

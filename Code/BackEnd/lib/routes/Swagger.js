@@ -17,7 +17,21 @@ const swaggerOptions = {
     },
     host: `${process.env.API_HOST}:${process.env.PORT}`,
     basePath: `${process.env.API_BASEPATH}`,
-    components: {}
+    components: {
+      securitySchemes: {
+        JWT: {
+          type: "apiKey",
+          in: "header",
+          name: "Authorization",
+          description: ""
+        }
+      }
+    },
+    security: [
+      {
+        JWT: []
+      }
+    ]
   },
   apis: ["lib/models/models/*.js", "lib/routes/*.js"]
 };
@@ -35,6 +49,35 @@ export default router;
  * @swagger
  * components:
  *    schemas:
+ *      FourZeroOne:
+ *        description: User failed to authenticate
+ *        type: object
+ *      FourZeroNineError:
+ *        description: An unexpected error occured in the application
+ *        type: object
+ *        properties:
+ *          error:
+ *            type: string
+ *            description: User-friendly description of unique-constraint error in application
+ *          codeName:
+ *            type: string
+ *            description: field where the unique-constraint error occured
+ *          value:
+ *            type: string
+ *            description: value that triggered the unique-constraint error
+ *      FourTwentyTwoError:
+ *        description: An unexpected error occured in the application
+ *        type: object
+ *        properties:
+ *          error:
+ *            type: string
+ *            description: User-friendly description of validation error in application
+ *          codeName:
+ *            type: string
+ *            description: field where the validation error occured
+ *          value:
+ *            type: string
+ *            description: value that triggered the validation error
  *      FiveHundredError:
  *        description: An unexpected error occured in the application
  *        type: object
