@@ -10,31 +10,72 @@ module.exports = {
           autoIncrement: true,
           primaryKey: true
         },
-        UserName: {
+        CreationMethod: {
           type: Sequelize.STRING,
-          unique: true,
           allowNull: false
         },
+        UserName: {
+          type: Sequelize.STRING,
+          allowNull: true,
+          unique: {
+            args: true,
+            msg: "UserName has already been taken"
+          },
+          validate: {
+            len: {
+              args: [3, 40],
+              msg: "Username must start with a letter, have no spaces, and be between 3 to 40 characters."
+            },
+            is: {
+              args: /^[A-Za-z][A-Za-z0-9-]+$/i, // must start with letter and only have letters, numbers, dashes
+              msg: "Username must start with a letter, have no spaces, and be 3 - 40 characters."
+            }
+          }
+        },
         Password: {
-          type: Sequelize.STRING
+          type: Sequelize.STRING,
+          allowNull: true
+        },
+        GoogleID: {
+          type: Sequelize.STRING,
+          allowNull: true
+        },
+        FacebookID: {
+          type: Sequelize.STRING,
+          allowNull: true
         },
         FirstName: {
           type: Sequelize.STRING,
+          allowNull: true,
           validate: {
-            isAlpha: true
+            len: {
+              args: [0 - 254],
+              msg: "Your full name can only be 254 caracters."
+            }
           }
         },
         LastName: {
           type: Sequelize.STRING,
+          allowNull: true,
           validate: {
-            isAlpha: true
+            len: {
+              args: [0 - 254],
+              msg: "Your full name can only be 254 caracters."
+            }
           }
         },
         Email: {
           type: Sequelize.STRING,
           unique: true,
           validate: {
-            isEmail: true
+            isEmail: {
+              args: true,
+              msg: "The email you entered is invalid or is already in our system."
+            },
+            len: {
+              args: [1 - 254],
+              msg: "The email you entered is invalid or longer than 254 characters."
+            }
           }
         },
         LastLogin: {
@@ -55,7 +96,36 @@ module.exports = {
         createdAt: "DateCreated",
         updatedAt: "DateUpdated",
         deletedAt: "DateDeleted",
-        paranoid: true
+        paranoid: true,
+
+        hooks: {
+          beforeCreate: async User => {
+            try {
+              // Only create password for local authenticated accounts
+              if (User.method !== "local") {
+                return;
+              }
+
+              // Generate salt
+              const salt = await bcrypt.genSalt(10);
+
+              // Hash password - Salt + Password
+              User.Password = await bcrypt.hash(User.Password, salt);
+            } catch (err) {
+              throw new Error(err);
+            }
+          }
+        },
+
+        defaultScope: {
+          attributes: { exclude: ["Password"] }
+        },
+
+        scopes: {
+          withPassword: {
+            attributes: {}
+          }
+        }
       }
     );
   },

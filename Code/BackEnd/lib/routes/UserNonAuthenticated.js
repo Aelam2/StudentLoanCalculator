@@ -27,9 +27,15 @@ let router = express.Router();
  *            schema:
  *              type: object
  *              properties:
- *                token:
+ *                status:
  *                  type: string
- *                  description: token used for logged-in requests
+ *                  example: success
+ *                result:
+ *                  type: object
+ *                  properties:
+ *                   token:
+ *                     type: string
+ *                     description: token used for logged-in requests
  *      '409':
  *        description: Email or Username has already been used
  *        content:
@@ -86,7 +92,7 @@ router.route("/sign-up").post(async (req, res) => {
     let { UserName, Password, FirstName, LastName, Email } = req.body;
 
     // Create new User, Errors are handled in catch block
-    const newUser = await Users.create({ UserName, Password, FirstName, LastName, Email });
+    const newUser = await Users.create({ CreationMethod: "local", UserName, Password, FirstName, LastName, Email });
 
     // Sign JWT Token
     const token = signUserToken(newUser);
@@ -96,10 +102,106 @@ router.route("/sign-up").post(async (req, res) => {
   } catch (error) {
     let sequelizeError = handleSequelizeError(error);
     if (sequelizeError.status) {
-      res.status(sequelizeError.status).json({ ...sequelizeError, status: "error", result: null });
+      res.status(sequelizeError.status).json({ ...sequelizeError, status: "error" });
     } else {
       res.status(500).json({ status: "error", result: null, error: "An unexpected error occurred" });
     }
+  }
+});
+
+/**
+ * @swagger
+ *
+ * /oauth/google:
+ *  post:
+ *    description: Sign-In via Google+ OAuth
+ *    tags: [Users]
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            required:
+ *              - access_token
+ *            properties:
+ *              access_token:
+ *                type: string
+ *                required: true
+ *                description: Access token from Google+
+ *    responses:
+ *      '200':
+ *        description: Sign-in was successful and token was returned
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                token:
+ *                  type: string
+ *                  description: token used for logged-in requests
+ *      '500':
+ *         description: An unexpected error occured
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/FiveHundredError'
+ */
+router.route("/oauth/google").post(passport.authenticate("googleToken", { session: false }), (req, res) => {
+  try {
+    const token = signUserToken(req.user);
+
+    res.status(200).json({ token });
+  } catch (err) {
+    res.status(500).json({ status: "error", result: null, error: "An unexpected error occurred" });
+  }
+});
+
+/**
+ * @swagger
+ *
+ * /oauth/facebook:
+ *  post:
+ *    description: Sign-In via Facebook OAuth
+ *    tags: [Users]
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            required:
+ *              - access_token
+ *            properties:
+ *              access_token:
+ *                type: string
+ *                required: true
+ *                description: Access token from Facebook
+ *    responses:
+ *      '200':
+ *        description: Sign-in was successful and token was returned
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                token:
+ *                  type: string
+ *                  description: token used for logged-in requests
+ *      '500':
+ *         description: An unexpected error occured
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/FiveHundredError'
+ */
+router.route("/oauth/facebook").post(passport.authenticate("facebookToken", { session: false }), (req, res) => {
+  try {
+    const token = signUserToken(req.user);
+
+    res.status(200).json({ token });
+  } catch (err) {
+    res.status(500).json({ status: "error", result: null, error: "An unexpected error occurred" });
   }
 });
 
@@ -155,7 +257,7 @@ router.route("/sign-in").post(passport.authenticate("local", { session: false })
 
     res.status(200).json({ token });
   } catch (err) {
-    res.status(500).send({ status: "error", result: null, error: "An unexpected error occurred" });
+    res.status(500).json({ status: "error", result: null, error: "An unexpected error occurred" });
   }
 });
 

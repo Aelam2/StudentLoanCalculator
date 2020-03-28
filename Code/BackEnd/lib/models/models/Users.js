@@ -64,13 +64,17 @@ module.exports = (sequelize, DataTypes) => {
         autoIncrement: true,
         primaryKey: true
       },
+      CreationMethod: {
+        type: DataTypes.STRING,
+        allowNull: false
+      },
       UserName: {
         type: DataTypes.STRING,
+        allowNull: true,
         unique: {
           args: true,
           msg: "UserName has already been taken"
         },
-        allowNull: false,
         validate: {
           len: {
             args: [3, 40],
@@ -84,7 +88,23 @@ module.exports = (sequelize, DataTypes) => {
       },
       Password: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true
+      },
+      GoogleID: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        unique: {
+          args: true,
+          msg: "Google account already exists"
+        }
+      },
+      FacebookID: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        unique: {
+          args: true,
+          msg: "Facebook account already exists"
+        }
       },
       FirstName: {
         type: DataTypes.STRING,
@@ -143,6 +163,11 @@ module.exports = (sequelize, DataTypes) => {
       hooks: {
         beforeCreate: async User => {
           try {
+            // Only create password for local authenticated accounts
+            if (User.CreationMethod !== "local") {
+              return;
+            }
+
             // Generate salt
             const salt = await bcrypt.genSalt(10);
 
@@ -152,11 +177,23 @@ module.exports = (sequelize, DataTypes) => {
             throw new Error(err);
           }
         }
+      },
+
+      defaultScope: {
+        attributes: { exclude: ["Password"] }
+      },
+
+      scopes: {
+        withPassword: {
+          attributes: {}
+        }
       }
     }
   );
 
+  // Check plain-text password against hashed password
   Users.prototype.isValidPassword = async function(password) {
+    console.log(password, this.Password);
     return await bcrypt.compare(password, this.Password);
   };
 
