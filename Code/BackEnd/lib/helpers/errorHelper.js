@@ -9,6 +9,7 @@ const handleSequelizeError = err => {
   };
 
   if (err instanceof Sequelize.UniqueConstraintError) {
+    console.log(err);
     status = 409;
     error = err.errors[0].message;
     result = {
@@ -26,4 +27,24 @@ const handleSequelizeError = err => {
   return { status, error, result };
 };
 
-export { handleSequelizeError };
+const isUnique = async (model, field, value, errMessage) => {
+  try {
+    // Check if model contains an object containing value
+    let result = await model.findOne({ where: { [field]: value } });
+
+    // If item exists with value throw error
+    if (result) {
+      throw new Error(`${model.name} contains row with ${field} = ${value}`);
+    }
+
+    // If no row is found, return true
+    return true;
+  } catch (err) {
+    throw new Sequelize.UniqueConstraintError({
+      message: err.message,
+      errors: [{ path: field, value: value, message: errMessage || `${field} has already been taken` }]
+    });
+  }
+};
+
+export { isUnique, handleSequelizeError };

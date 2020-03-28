@@ -17,10 +17,7 @@ module.exports = {
         UserName: {
           type: Sequelize.STRING,
           allowNull: true,
-          unique: {
-            args: true,
-            msg: "UserName has already been taken"
-          },
+          unique: true,
           validate: {
             len: {
               args: [3, 40],

@@ -72,7 +72,6 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: true,
         unique: {
-          args: true,
           msg: "UserName has already been taken"
         },
         validate: {
@@ -128,7 +127,9 @@ module.exports = (sequelize, DataTypes) => {
       },
       Email: {
         type: DataTypes.STRING,
-        unique: true,
+        unique: {
+          msg: "Email has already been taken"
+        },
         validate: {
           isEmail: {
             args: true,

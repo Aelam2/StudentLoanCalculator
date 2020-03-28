@@ -2,7 +2,7 @@ import express from "express";
 import passport from "passport";
 import { Users } from "../models/models";
 import { signUserToken } from "../helpers/userHelper";
-import { handleSequelizeError } from "../helpers/errorHelper";
+import { isUnique, handleSequelizeError } from "../helpers/errorHelper";
 let router = express.Router();
 
 /**
@@ -27,15 +27,9 @@ let router = express.Router();
  *            schema:
  *              type: object
  *              properties:
- *                status:
+ *                token:
  *                  type: string
- *                  example: success
- *                result:
- *                  type: object
- *                  properties:
- *                   token:
- *                     type: string
- *                     description: token used for logged-in requests
+ *                  description: token used for logged-in requests
  *      '409':
  *        description: Email or Username has already been used
  *        content:
@@ -90,6 +84,10 @@ let router = express.Router();
 router.route("/sign-up").post(async (req, res) => {
   try {
     let { UserName, Password, FirstName, LastName, Email } = req.body;
+
+    // Check if UserName or Email already exists in database
+    await isUnique(Users, "UserName", UserName);
+    await isUnique(Users, "Email", Email);
 
     // Create new User, Errors are handled in catch block
     const newUser = await Users.create({ CreationMethod: "local", UserName, Password, FirstName, LastName, Email });
