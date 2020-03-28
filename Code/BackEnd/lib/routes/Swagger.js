@@ -56,33 +56,58 @@ export default router;
  *        description: An unexpected error occured in the application
  *        type: object
  *        properties:
+ *          status:
+ *            type: string
+ *            example: error
  *          error:
  *            type: string
  *            description: User-friendly description of unique-constraint error in application
- *          codeName:
- *            type: string
- *            description: field where the unique-constraint error occured
- *          value:
- *            type: string
- *            description: value that triggered the unique-constraint error
+ *            example: UserName has already been taken
+ *          result:
+ *            type: object
+ *            properties:
+ *              codeName:
+ *                type: string
+ *                description: field where the unique-constraint error occured
+ *                example: UserName
+ *              value:
+ *                type: string
+ *                description: value that triggered the unique-constraint error
+ *                example: AgentSparkles
  *      FourTwentyTwoError:
  *        description: An unexpected error occured in the application
  *        type: object
  *        properties:
+ *          status:
+ *            type: string
+ *            example: error
  *          error:
  *            type: string
  *            description: User-friendly description of validation error in application
- *          codeName:
- *            type: string
- *            description: field where the validation error occured
- *          value:
- *            type: string
- *            description: value that triggered the validation error
+ *            example: Username must start with a letter, have no spaces, and be between 3 to 40 characters
+ *          result:
+ *            type: object
+ *            properties:
+ *              codeName:
+ *                type: string
+ *                description: field where the validation error occured
+ *                example: UserName
+ *              value:
+ *                type: string
+ *                description: value that triggered the validation error
+ *                example: 1A
  *      FiveHundredError:
  *        description: An unexpected error occured in the application
  *        type: object
  *        properties:
+ *          status:
+ *            type: string
+ *            example: error
  *          error:
  *            type: string
  *            description: Description of error in application
+ *            example: An unexpected error occured
+ *          result:
+ *            type: object
+ *            example: null
  */
