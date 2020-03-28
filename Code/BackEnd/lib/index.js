@@ -1,6 +1,7 @@
 import express from "express";
 import bodyParser from "body-parser";
 import passport from "passport";
+import cors from "cors";
 import auth from "./middleware/authentication";
 
 import userNonAuthenticated from "./routes/UserNonAuthenticated";
@@ -13,6 +14,18 @@ import swagger from "./routes/Swagger";
 
 const app = express();
 const port = process.env.PORT || 1337;
+
+var whitelist = process.env.CORS_WHITELIST && process.env.CORS_WHITELIST.split(",");
+var corsOptions = {
+  origin: function(origin, callback) {
+    if (process.env.NODE_ENV === "development" || whitelist.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  }
+};
+app.use(cors(corsOptions));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
