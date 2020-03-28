@@ -1,0 +1,98 @@
+$normal-color: #d9d9d9;
+$white: #fff;
+$black: #000;
+
+$primary-color: #1890ff;
+$info-color: #1890ff;
+$success-color: #52c41a;
+$processing-color: #1890ff;
+$error-color: #f5222d;
+$highlight-color: #ff4d4f;
+$warning-color: #faad14;
+
+$background-color-light: hsv(0, 0, 98%); // background of header and selected item
+$background-color-base: hsv(0, 0, 96%); // Default grey background color
+
+$disabled-color: fade(#000, 25%);
+$disabled-bg: $background-color-base;
+$disabled-color-dark: fade(#fff, 35%);
+
+// Background color for `<body>`
+$body-background: #fff;
+// Base background color for most components
+$component-background: #fff;
+// Popover background color
+$popover-background: $component-background;
+$font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+  "Segoe UI Symbol", "Noto Color Emoji";
+$code-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+$text-color: fade($black, 65%);
+$text-color-secondary: fade($black, 45%);
+$text-color-inverse: $white;
+$icon-color: inherit;
+$icon-color-hover: fade($black, 75%);
+$heading-color: fade(#000, 85%);
+$heading-color-dark: fade($white, 100%);
+$text-color-dark: fade($white, 85%);
+$text-color-secondary-dark: fade($white, 65%);
+$text-selection-bg: $primary-color;
+$font-variant-base: tabular-nums;
+$font-feature-settings-base: "tnum";
+$font-size-base: 14px;
+$font-size-lg: $font-size-base + 2px;
+$font-size-sm: 12px;
+$heading-1-size: ceil($font-size-base * 2.71);
+$heading-2-size: ceil($font-size-base * 2.14);
+$heading-3-size: ceil($font-size-base * 1.71);
+$heading-4-size: ceil($font-size-base * 1.42);
+
+// Layout
+$layout-body-background: #f0f2f5;
+$layout-header-background: #001529;
+$layout-header-height: 64px;
+$layout-header-padding: 0 50px;
+$layout-header-color: $text-color;
+$layout-footer-padding: 24px 50px;
+$layout-footer-background: $layout-body-background;
+$layout-sider-background: $layout-header-background;
+$layout-trigger-height: 48px;
+$layout-trigger-background: #002140;
+$layout-trigger-color: #fff;
+$layout-zero-trigger-width: 36px;
+$layout-zero-trigger-height: 42px;
+
+$heading-color: rgba(0, 0, 0, 0.85);
+$text-color-secondary: rgba(0, 0, 0, 0.45);
+$font-size-base: 14px;
+
+// Media queries breakpoints
+// Extra small screen / phone
+$screen-xs: 480px;
+$screen-xs-min: $screen-xs;
+
+//Small screen / tablet
+$screen-sm: 576px;
+$screen-sm-min: $screen-sm;
+
+// Medium screen / desktop
+$screen-md: 768px;
+$screen-md-min: $screen-md;
+
+//Large screen / wide desktop
+$screen-lg: 992px;
+$screen-lg-min: $screen-lg;
+
+//Extra large screen / full hd
+$screen-xl: 1200px;
+$screen-xl-min: $screen-xl;
+
+// Extra extra large screen / large desktop
+$screen-xxl: 1600px;
+$screen-xxl-min: $screen-xxl;
+
+// provide a maximum
+$screen-xs-max: ($screen-sm-min - 1px);
+$screen-sm-max: ($screen-md-min - 1px);
+$screen-md-max: ($screen-lg-min - 1px);
+$screen-lg-max: ($screen-xl-min - 1px);
+$screen-xl-max: ($screen-xxl-min - 1px);
