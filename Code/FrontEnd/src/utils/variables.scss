@@ -23,6 +23,24 @@ $body-background: #fff;
 $component-background: #fff;
 // Popover background color
 $popover-background: $component-background;
+
+$line-height-base: 1.5715;
+$border-radius-base: 2px;
+$border-radius-sm: $border-radius-base;
+
+// Border color
+$border-color-base: hsv(0, 0, 85%); // base border outline a component
+$border-color-split: hsv(0, 0, 94%); // split border inside a component
+$border-color-inverse: $white;
+$border-width-base: 1px; // width of the border for a component
+$border-style-base: solid; // style of a components border
+
+// vertical paddings
+$padding-lg: 24px; // containers
+$padding-md: 16px; // small containers and buttons
+$padding-sm: 12px; // Form controls and items
+$padding-xs: 8px; // small items
+
 $font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
   "Segoe UI Symbol", "Noto Color Emoji";
 $code-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
@@ -96,3 +114,52 @@ $screen-sm-max: ($screen-md-min - 1px);
 $screen-md-max: ($screen-lg-min - 1px);
 $screen-lg-max: ($screen-xl-min - 1px);
 $screen-xl-max: ($screen-xxl-min - 1px);
+
+// Buttons
+$btn-font-weight: 400;
+$btn-border-radius-base: $border-radius-base;
+$btn-border-radius-sm: $border-radius-base;
+$btn-border-width: $border-width-base;
+$btn-border-style: $border-style-base;
+$btn-shadow: 0 2px 0 rgba(0, 0, 0, 0.015);
+$btn-primary-shadow: 0 2px 0 rgba(0, 0, 0, 0.045);
+$btn-text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12);
+
+$btn-primary-color: #fff;
+$btn-primary-bg: $primary-color;
+
+$btn-default-color: $text-color;
+$btn-default-bg: $component-background;
+$btn-default-border: $border-color-base;
+
+$btn-danger-color: #fff;
+$btn-danger-bg: $error-color;
+$btn-danger-border: $error-color;
+
+$btn-disable-color: $disabled-color;
+$btn-disable-bg: $disabled-bg;
+$btn-disable-border: $border-color-base;
+
+$btn-default-ghost-color: $component-background;
+$btn-default-ghost-bg: transparent;
+$btn-default-ghost-border: $component-background;
+
+$btn-font-size-lg: $font-size-lg;
+$btn-font-size-sm: $font-size-base;
+$btn-padding-horizontal-base: $padding-md - 1px;
+$btn-padding-horizontal-lg: $btn-padding-horizontal-base;
+$btn-padding-horizontal-sm: $padding-xs - 1px;
+
+$btn-height-base: 32px;
+$btn-height-lg: 40px;
+$btn-height-sm: 24px;
+
+$btn-circle-size: $btn-height-base;
+$btn-circle-size-lg: $btn-height-lg;
+$btn-circle-size-sm: $btn-height-sm;
+
+$btn-square-size: $btn-height-base;
+$btn-square-size-lg: $btn-height-lg;
+$btn-square-size-sm: $btn-height-sm;
+
+$btn-link-ghost-color: $component-background;

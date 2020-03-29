@@ -19,24 +19,9 @@
       color: $primary-color;
     }
   }
-
-  .other {
-    margin-top: 24px;
-    line-height: 22px;
-    text-align: left;
-
-    .register {
-      float: right;
-    }
-  }
 }
 
 .login {
-  .getCaptcha {
-    display: block;
-    width: 100%;
-  }
-
   .icon {
     margin-left: 16px;
     color: rgba(0, 0, 0, 0.2);
@@ -50,32 +35,48 @@
     }
   }
 
-  .other {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 24px;
-    line-height: 22px;
-    text-align: left;
+  .submitContainer {
+    margin: 0px;
 
-    .alternative {
-      .socialMedia {
-        margin-right: 12px;
-      }
+    .submit {
+      width: 100%;
+      margin-top: 0px;
     }
-
     .register {
       float: right;
+    }
+  }
+
+  .other {
+    .orSignUpDivider {
+      font-weight: 700;
+      font-size: $font-size-base + 2px;
+      text-align: center;
+      margin: 2px 0px 24px 0px;
+    }
+
+    .alternative {
+      display: flex;
+      flex-direction: column;
+      .socialMediaBtn {
+        text-align: left;
+        margin-bottom: 12px;
+
+        .socialMediaBtnInnerText {
+          position: absolute;
+          text-align: center;
+          top: 50%;
+          font-size: 16px;
+          transform: translateY(-50%) translateX(-37px);
+          width: 100%;
+          padding-left: 4px;
+        }
+      }
     }
   }
 
   .prefixIcon {
     color: $disabled-color;
     font-size: $font-size-base;
-  }
-
-  .submit {
-    width: 100%;
-    margin-top: 0px;
   }
 }
