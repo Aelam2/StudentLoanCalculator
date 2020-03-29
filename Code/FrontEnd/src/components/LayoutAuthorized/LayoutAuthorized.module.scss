@@ -1,1 +1,39 @@
 @import "utils/variables.scss";
+
+.layout {
+  height: 100vh;
+}
+
+.header {
+  display: flex;
+  padding-left: 0px !important;
+
+  .title {
+    color: white;
+    width: 350px;
+    font-size: 32px;
+    text-align: center;
+  }
+
+  .menu {
+    width: 100%;
+
+    .items {
+    }
+    .signOut {
+      float: right;
+    }
+  }
+}
+
+.logo {
+  width: 120px;
+  height: 31px;
+  background: rgba(255, 255, 255, 0.2);
+  margin: 16px 28px 16px 0;
+  float: left;
+}
+
+.siteLayoutBackground {
+  background: #fff;
+}

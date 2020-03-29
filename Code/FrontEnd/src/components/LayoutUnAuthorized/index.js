@@ -12,7 +12,7 @@ class LayoutUnAuthorized extends React.Component {
             <div className={styles.header}>
               <span className={styles.title}>Loan Payoff Calculator</span>
             </div>
-            <div className={styles.desc}>View the difference between payoff plans</div>
+            <div className={styles.desc}>Payoff Loans Smarter and Faster</div>
           </div>
           {children}
         </div>
