@@ -8,18 +8,24 @@
     "@testing-library/user-event": "^7.2.1",
     "antd": "^4.0.4",
     "axios": "^0.19.2",
+    "date-time-format-timezone": "^1.0.22",
+    "intl": "^1.2.5",
     "node-sass": "^4.13.1",
     "rc-queue-anim": "^1.8.4",
     "rc-tween-one": "^2.6.8",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-facebook-login": "^4.1.1",
+    "react-google-login": "^5.1.2",
+    "react-intl": "^4.3.1",
     "react-redux": "^7.2.0",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.1",
-    "redux": "^4.0.5"
+    "redux": "^4.0.5",
+    "redux-thunk": "^2.3.0"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "set PORT=5001 && set HTTPS=true && react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
