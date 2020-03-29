@@ -145,14 +145,23 @@ router.route("/sign-up").post(async (req, res) => {
  *             schema:
  *               $ref: '#/components/schemas/FiveHundredError'
  */
-router.route("/oauth/google").post(passport.authenticate("googleToken", { session: false }), (req, res) => {
-  try {
-    const token = signUserToken(req.user);
+router.route("/oauth/google").post((req, res, next) => {
+  passport.authenticate("google", { session: false }, async (err, user, info) => {
+    try {
+      if (err) throw err;
 
-    res.status(200).json({ token });
-  } catch (err) {
-    res.status(500).json({ status: "error", result: null, error: "An unexpected error occurred" });
-  }
+      const token = signUserToken(user);
+
+      res.status(200).json({ token });
+    } catch (err) {
+      let sequelizeError = handleSequelizeError(err);
+      if (sequelizeError.status) {
+        res.status(sequelizeError.status).json({ ...sequelizeError, status: "error" });
+      } else {
+        res.status(500).json({ status: "error", result: null, error: "An unexpected error occurred" });
+      }
+    }
+  })(req, res, next);
 });
 
 /**
@@ -193,14 +202,24 @@ router.route("/oauth/google").post(passport.authenticate("googleToken", { sessio
  *             schema:
  *               $ref: '#/components/schemas/FiveHundredError'
  */
-router.route("/oauth/facebook").post(passport.authenticate("facebookToken", { session: false }), (req, res) => {
-  try {
-    const token = signUserToken(req.user);
+router.route("/oauth/facebook").post((req, res, next) => {
+  passport.authenticate("facebook", { session: false }, async (err, user, info) => {
+    try {
+      if (err) throw err;
 
-    res.status(200).json({ token });
-  } catch (err) {
-    res.status(500).json({ status: "error", result: null, error: "An unexpected error occurred" });
-  }
+      const token = signUserToken(user);
+
+      res.status(200).json({ token });
+    } catch (err) {
+      console.log(err);
+      let sequelizeError = handleSequelizeError(err);
+      if (sequelizeError.status) {
+        res.status(sequelizeError.status).json({ ...sequelizeError, status: "error" });
+      } else {
+        res.status(500).json({ status: "error", result: null, error: "An unexpected error occurred" });
+      }
+    }
+  })(req, res, next);
 });
 
 /**
@@ -251,7 +270,7 @@ router.route("/oauth/facebook").post(passport.authenticate("facebookToken", { se
  */
 router.route("/sign-in").post(passport.authenticate("local", { session: false }), (req, res) => {
   try {
-    const token = signUserToken(req.user);
+    const token = signUserToken(req.user.toJSON());
 
     res.status(200).json({ token });
   } catch (err) {

@@ -9,7 +9,6 @@ const handleSequelizeError = err => {
   };
 
   if (err instanceof Sequelize.UniqueConstraintError) {
-    console.log(err);
     status = 409;
     error = err.errors[0].message;
     result = {
@@ -40,6 +39,7 @@ const isUnique = async (model, field, value, errMessage) => {
     // If no row is found, return true
     return true;
   } catch (err) {
+    // If item existed with value, return a UniquConstraint Sequelize error
     throw new Sequelize.UniqueConstraintError({
       message: err.message,
       errors: [{ path: field, value: value, message: errMessage || `${field} has already been taken` }]

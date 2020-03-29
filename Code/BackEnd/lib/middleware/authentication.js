@@ -1,10 +1,11 @@
 import dotenv from "dotenv";
 import passport from "passport";
 import { ExtractJwt, Strategy as JWTStrategy } from "passport-jwt";
-import GooglePlusStrategy from "passport-google-plus-token";
+import { Strategy as GoogleStrategy } from "passport-google-token";
 import FacebookTokenStrategy from "passport-facebook-token";
 import LocalStrategy from "passport-local";
 import { sequelize, Users } from "../models/models";
+import { isUnique } from "../helpers/errorHelper";
 
 dotenv.config();
 
@@ -38,8 +39,8 @@ passport.use(
 
 // GOOGLE OAUTH STRATEGY
 passport.use(
-  "googleToken",
-  new GooglePlusStrategy(
+  "google",
+  new GoogleStrategy(
     {
       clientID: process.env.GOOGLE_OAUTH_CLIENT_ID,
       clientSecret: process.env.GOOGLE_OAUTH_CLIENT_SECRET
@@ -55,6 +56,9 @@ passport.use(
           // Return existing user
           return done(null, existingUser);
         }
+
+        // Check if Email was ever used with existing local login
+        await isUnique(Users, "Email", profile.emails[0].value);
 
         // Create new user with their Google Credentials
         const newUser = await Users.create({
@@ -76,7 +80,7 @@ passport.use(
 
 // FACEBOOK OAUTH STRATEGY
 passport.use(
-  "facebookToken",
+  "facebook",
   new FacebookTokenStrategy(
     {
       clientID: process.env.FACEBOOK_OAUTH_CLIENT_ID,
@@ -93,6 +97,9 @@ passport.use(
           // Return existing user
           return done(null, existingUser);
         }
+
+        // Check if Email was ever used with existing local login
+        await isUnique(Users, "Email", profile.emails[0].value);
 
         // Create new user with their Google Credentials
         const newUser = await Users.create({
