@@ -10,7 +10,7 @@
     "axios": "^0.19.2",
     "date-time-format-timezone": "^1.0.22",
     "intl": "^1.2.5",
-    "node-sass": "^4.13.1",
+    "node-sass": "^7.0.0",
     "rc-queue-anim": "^1.8.4",
     "rc-tween-one": "^2.6.8",
     "react": "^16.13.1",
